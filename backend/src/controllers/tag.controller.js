@@ -40,10 +40,8 @@ exports.readTagController = (req, res) => {
       )
       .exec((err, data) => {
         if (err) {
-          console.log(err)
           return res.status(500).json({ error: errorHandler(err) });
         } else {
-          console.log("Bhej rhe")
           res.json({ tag: tag, blogs: data });
         }
       });

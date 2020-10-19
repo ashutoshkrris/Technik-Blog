@@ -4,6 +4,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { logout, isAuth } from "../actions/auth";
 import NProgress from "nprogress";
+import Search from "./blog/Search"
 
 import {
   Collapse,
@@ -23,7 +24,7 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   return (
-    <div>
+    <React.Fragment>
       <Navbar color="light" light expand="md">
         <Link href="/">
           <NavLink className="font-weight-bold" style={{ cursor: "pointer" }}>
@@ -87,7 +88,8 @@ const Header = () => {
           </Nav>
         </Collapse>
       </Navbar>
-    </div>
+      <Search/>
+    </React.Fragment>
   );
 };
 

@@ -9,6 +9,7 @@ const {
   updateBlogController,
   photoController,
   relatedBlogController,
+  listSearchController,
 } = require("../controllers/blog.controller");
 const {
   protectedController,
@@ -39,7 +40,8 @@ router.put(
   adminMiddleware,
   updateBlogController
 );
-router.get("/photo/:slug", photoController)
-router.post("/related", relatedBlogController)
+router.get("/photo/:slug", photoController);
+router.post("/related", relatedBlogController);
+router.get("/search", listSearchController);
 
 module.exports = router;

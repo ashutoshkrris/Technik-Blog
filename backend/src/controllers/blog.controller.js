@@ -284,3 +284,25 @@ exports.relatedBlogController = (req, res) => {
       res.json(blogs);
     });
 };
+
+// Search for blog
+exports.listSearchController = (req, res) => {
+  const { search } = req.query;
+  if (search) {
+    Blog.find(
+      {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { body: { $regex: search, $options: "i" } },
+        ],
+      },
+      (err, blog) => {
+        if (err) {
+          return res.status(400).json({ error: errorHandler(err) });
+        } else {
+          return res.json(blog);
+        }
+      }
+    ).select("-photo -body");
+  }
+};
