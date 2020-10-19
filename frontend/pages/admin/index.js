@@ -13,48 +13,46 @@ const AdminIndex = () => {
             </div>
             <div className="col-md-4">
               <ul class="list-group">
-                <a>
-                  <Link href="/admin/crud/category-tag">
-                    <li
-                      class="list-group-item list-group-item-action"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Create New Category
-                    </li>
-                  </Link>
-                </a>
-                
-                <a>
-                  <Link href="/admin/crud/category-tag">
-                    <li
-                      class="list-group-item list-group-item-action"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Create New Tag
-                    </li>
-                  </Link>
+                <a
+                  href="/admin/crud/category-tag"
+                  style={{ textDecoration: "none" }}
+                >
+                  <li
+                    class="list-group-item list-group-item-action"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Create New Category
+                  </li>
                 </a>
 
-                <a>
-                  <Link href="/admin/crud/blog">
-                    <li
-                      class="list-group-item list-group-item-action"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Create New Blog
-                    </li>
-                  </Link>
+                <a
+                  href="/admin/crud/category-tag"
+                  style={{ textDecoration: "none" }}
+                >
+                  <li
+                    class="list-group-item list-group-item-action"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Create New Tag
+                  </li>
                 </a>
 
-                <a>
-                  <Link href="/admin/crud/blogs">
-                    <li
-                      class="list-group-item list-group-item-action"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Update/Delete Blog
-                    </li>
-                  </Link>
+                <a href="/admin/crud/blog" style={{ textDecoration: "none" }}>
+                  <li
+                    class="list-group-item list-group-item-action"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Create New Blog
+                  </li>
+                </a>
+
+                <a href="/admin/crud/blogs" style={{ textDecoration: "none" }}>
+                  <li
+                    class="list-group-item list-group-item-action"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Update/Delete Blog
+                  </li>
                 </a>
               </ul>
             </div>

@@ -35,51 +35,53 @@ const Header = () => {
           <Nav className="ml-auto" navbar>
             <React.Fragment>
               <NavItem>
-                <Link href="/blogs">
+                <a href="/blogs" style={{ textDecoration: "none" }}>
                   <NavLink style={{ cursor: "pointer" }}>Blogs</NavLink>
-                </Link>
+                </a>
               </NavItem>
             </React.Fragment>
             {!isAuth() && (
               <React.Fragment>
                 <NavItem>
-                  <Link href="/signup">
+                  <a href="/signup" style={{ textDecoration: "none" }}>
                     <NavLink style={{ cursor: "pointer" }}>Sign Up</NavLink>
-                  </Link>
+                  </a>
                 </NavItem>
                 <NavItem>
-                  <Link href="/login">
+                  <a href="/login" style={{ textDecoration: "none" }}>
                     <NavLink style={{ cursor: "pointer" }}>Log In</NavLink>
-                  </Link>
+                  </a>
                 </NavItem>
               </React.Fragment>
             )}
             {isAuth() && isAuth().role === 0 && (
               <NavItem>
-                <Link href="/user">
+                <a href="/user" style={{ textDecoration: "none" }}>
                   <NavLink style={{ cursor: "pointer" }}>{`${
                     isAuth().name.split(" ")[0]
                   }'s Dashboard`}</NavLink>
-                </Link>
+                </a>
               </NavItem>
             )}
             {isAuth() && isAuth().role === 1 && (
               <NavItem>
-                <Link href="/admin">
+                <a href="/admin" style={{ textDecoration: "none" }}>
                   <NavLink style={{ cursor: "pointer" }}>{`${
                     isAuth().name.split(" ")[0]
                   }'s Dashboard`}</NavLink>
-                </Link>
+                </a>
               </NavItem>
             )}
             {isAuth() && (
               <NavItem>
+                <a style={{ textDecoration: "none" }}>
                 <NavLink
                   style={{ cursor: "pointer" }}
                   onClick={() => logout(() => Router.replace("/login"))}
                 >
-                  Logout
+                    Logout
                 </NavLink>
+                </a>
               </NavItem>
             )}
           </Nav>
