@@ -32,10 +32,13 @@ const RelatedCard = ({ blog }) => {
 
       <div className="card-body text-center">
         <div className="float-left">
-          Posted by{" "}
-          <Link href={`/`}>
-            <a>{blog.postedBy.name}</a>
-          </Link>{" "}
+          Written by{" "}
+          <a
+            href={`/profile/${blog.postedBy.username}`}
+            style={{ textDecoration: "none" }}
+          >
+            {blog.postedBy.name}
+          </a>{" "}
         </div>
         <div className="float-right">{moment(blog.updatedAt).fromNow()}</div>
       </div>

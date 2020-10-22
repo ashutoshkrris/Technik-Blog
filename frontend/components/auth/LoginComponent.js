@@ -14,8 +14,6 @@ const LoginComponent = () => {
 
   const { email, password, error, loading, message, showForm } = values;
 
-  console.log("1 ",values)
-
   useEffect(() => {
     isAuth() && Router.push("/");
   }, []);
@@ -24,9 +22,8 @@ const LoginComponent = () => {
     e.preventDefault();
     setValues({ ...values, loading: true, error: false });
     const user = { email, password };
-    console.log("2 ",user)
+    console.log("2 ", user);
     login(user).then((data) => {
-      console.log(data);
       if (data.error) {
         setValues({ ...values, error: data.error, loading: false });
       } else {
@@ -49,11 +46,29 @@ const LoginComponent = () => {
   };
 
   const showLoading = () =>
-    loading ? <div className="alert alert-info">Loading...</div> : "";
+    loading ? (
+      <div className="alert alert-info text-center">
+        <b>Logging in...</b>
+      </div>
+    ) : (
+      ""
+    );
   const showError = () =>
-    error ? <div className="alert alert-danger">{error}</div> : "";
+    error ? (
+      <div className="alert alert-danger text-center">
+        <b>{error}</b>
+      </div>
+    ) : (
+      ""
+    );
   const showMessage = () =>
-    message ? <div className="alert alert-success">{message}</div> : "";
+    message ? (
+      <div className="alert alert-success text-center">
+        <b>{message}</b>
+      </div>
+    ) : (
+      ""
+    );
 
   const loginForm = () => {
     return (

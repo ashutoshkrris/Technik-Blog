@@ -13,6 +13,15 @@ const AdminIndex = () => {
             </div>
             <div className="col-md-4">
               <ul class="list-group">
+                <a href="/user/update" style={{ textDecoration: "none" }}>
+                  <li
+                    class="list-group-item list-group-item-action"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Update Profile
+                  </li>
+                </a>
+
                 <a
                   href="/admin/crud/category-tag"
                   style={{ textDecoration: "none" }}

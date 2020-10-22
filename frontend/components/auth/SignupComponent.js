@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { signup, isAuth } from "../../actions/auth";
-import Router from "next/router"
+import Router from "next/router";
 
 const SignupComponent = () => {
   const [values, setValues] = useState({
@@ -26,12 +26,21 @@ const SignupComponent = () => {
   } = values;
 
   useEffect(() => {
-    isAuth() && Router.push('/')
-  },[])
+    isAuth() && Router.push("/");
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.table({ name, email, password,confirmPassword, error, loading, message, showForm });
+    console.table({
+      name,
+      email,
+      password,
+      confirmPassword,
+      error,
+      loading,
+      message,
+      showForm,
+    });
     setValues({ ...values, loading: true, error: false });
     const user = { name, email, password, confirmPassword };
     signup(user).then((data) => {
@@ -58,11 +67,29 @@ const SignupComponent = () => {
   };
 
   const showLoading = () =>
-    loading ? <div className="alert alert-info">Loading...</div> : "";
+    loading ? (
+      <div className="alert alert-info text-center">
+        <b>Signing up...</b>
+      </div>
+    ) : (
+      ""
+    );
   const showError = () =>
-    error ? <div className="alert alert-danger">{error}</div> : "";
+    error ? (
+      <div className="alert alert-danger text-center">
+        <b>{error}</b>
+      </div>
+    ) : (
+      ""
+    );
   const showMessage = () =>
-    message ? <div className="alert alert-success">{message}</div> : "";
+    message ? (
+      <div className="alert alert-success text-center">
+        <b>{message}</b>
+      </div>
+    ) : (
+      ""
+    );
 
   const signupForm = () => {
     return (
@@ -104,7 +131,9 @@ const SignupComponent = () => {
           ></input>
         </div>
         <div>
-          <center><button className="btn btn-primary">Sign Up</button></center>
+          <center>
+            <button className="btn btn-primary">Sign Up</button>
+          </center>
         </div>
       </form>
     );

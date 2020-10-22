@@ -39,7 +39,7 @@ const authRoute = require("./src/routes/auth.route");
 app.use("/api", authRoute);
 
 const userRoute = require("./src/routes/user.route");
-app.use("/api", userRoute);
+app.use("/api/user", userRoute);
 
 const categoryRoute = require("./src/routes/category.route");
 app.use("/api", categoryRoute);

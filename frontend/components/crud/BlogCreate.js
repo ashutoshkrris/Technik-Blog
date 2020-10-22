@@ -196,15 +196,13 @@ const BlogCreate = ({ router }) => {
         <div>
           <div className="form-group pb-2">
             <br />
-            <label className="btn btn-outline-info">
-              Upload featured image
-              <input
-                onChange={handleChange("photo")}
-                type="file"
-                accept="image/*"
-                hidden
-              />
-            </label>
+            <label className="text-muted">Upload featured image</label>
+            <br/>
+            <input
+              onChange={handleChange("photo")}
+              type="file"
+              accept="image/*"
+            />
             <br />
             <small className="text-muted">
               Image must not exceed 1 MB in size.

@@ -3,12 +3,12 @@ import { API } from "../config";
 import cookie from "js-cookie";
 
 export const signup = (user) => {
-  console.log("Received: ",user)
+  console.log("Received: ", user);
   return fetch(`${API}/signup`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user),
   })
@@ -24,7 +24,7 @@ export const login = (user) => {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user),
   })
@@ -103,6 +103,17 @@ export const isAuth = () => {
       } else {
         return false;
       }
+    }
+  }
+};
+
+export const updatedUser = (user, next) => {
+  if (process.browser) {
+    if (localStorage.getItem("user")) {
+      let auth = JSON.parse(localStorage.getItem("user"));
+      auth = user;
+      localStorage.setItem("user", JSON.stringify(auth));
+      next();
     }
   }
 };
