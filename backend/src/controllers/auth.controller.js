@@ -4,6 +4,17 @@ const shortId = require("shortid");
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const { errorHandler } = require("../helpers/dbHandlingError");
+const nodemailer = require("nodemailer");
+const _ = require("lodash");
+
+//Configuring nodemailer
+let mailTransporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_FROM,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 exports.signupController = (req, res) => {
   // check if user is already registered
@@ -103,4 +114,116 @@ exports.canUpdateandDeleteMiddleware = (req, res, next) => {
     }
     next();
   });
+};
+
+exports.forgotPasswordController = (req, res) => {
+  const { email } = req.body;
+  User.findOne({ email }).exec((err, user) => {
+    if (err) {
+      return res.status(500).json({ error: errorHandler(err) });
+    } else if (user === null) {
+      return res.status(404).json({ error: "User doesn't exist." });
+    } else {
+      const token = jwt.sign(
+        { _id: user._id },
+        process.env.JWT_RESET_PASSWORD,
+        { expiresIn: "15m" }
+      );
+      const emailData = {
+        to: email,
+        from: `${process.env.APPNAME} <noreply@technik.com>`,
+        subject: `Password Reset Link | ${process.env.APPNAME}`,
+        html: `
+        <p>Hello ${user.name},</p>
+        <p>It happens that we often forget our password. Don't worry, we at <a href="http://technik.com">Technik</a> are here to assist you..</p>
+        <p>In order to reset your Technik account password, we need to verify if it's nobody but you trying to reset your password. Please use the below link to confirm your email address and complete the reset password process.<p>
+        <p>${process.env.CLIENT_URL}/users/password/reset/${token}</p>
+        <br>
+        <p>Thanks and regards<br>Technik</p>
+        `,
+      };
+      // update database resetPasswordLink
+      return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+        if (err) {
+          return res.status(500).json({
+            error: errorHandler(err),
+          });
+        } else {
+          mailTransporter.sendMail(emailData, (err, data) => {
+            if (err) {
+              return res.status(451).json({
+                error: errorHandler(err),
+              });
+            } else {
+              return res.status(250).json({
+                message: `Please follow the instructions mentioned in the email sent to ${email}.`,
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+exports.resetPasswordController = (req, res) => {
+  const { resetPasswordLink, newPassword } = req.body;
+
+  if (resetPasswordLink) {
+    jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function (
+      err,
+      decode
+    ) {
+      if (err) {
+        return res.status(410).json({
+          error: "Expired link. Try again",
+        });
+      }
+      User.findOne({ resetPasswordLink }, (err, user) => {
+        if (err) {
+          return res.status(500).json({
+            error: errorHandler(err),
+          });
+        } else if (user === null) {
+          return res.status(404).json({
+            error: "User doesn't exist.",
+          });
+        } else {
+          const updatedFields = {
+            password: newPassword,
+            resetPasswordLink: "",
+          };
+          user = _.extend(user, updatedFields);
+          user.save((err, result) => {
+            if (err) {
+              return res.status(400).json({
+                error: "Error occurred while changing your password",
+              });
+            }
+            res.status(200).json({
+              message: `Great! Now you can login with your new password`,
+            });
+            const emailData = {
+              to: user.email,
+              from: `${process.env.APPNAME} <noreply@technik.com>`,
+              subject: `Password Changed | ${process.env.APPNAME}`,
+              html: `
+              <p>Hello ${user.name},</p>
+              <p>We found that password of your account on <a href="http://technik.com">Technik</a> was changed just now.</p>
+              <p>If it was you, you can ignore this email.<p>
+              <p>If it wasn't you, kindly report it to us at <a href="${process.env.CLIENT_URL}/contact">here</a> so that we can take further actions.</p>
+              <br>
+              <p>Thanks and regards<br>Technik</p>
+              `,
+            };
+            mailTransporter.sendMail(emailData, (err, data) => {
+              if (err) {
+                console.log(errorHandler(err))
+              }
+            });
+          });
+        }
+      });
+    });
+  }
 };

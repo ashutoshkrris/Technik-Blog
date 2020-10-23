@@ -133,3 +133,33 @@ export const updatedUser = (user, next) => {
     }
   }
 };
+
+export const forgotPassword = (email) => {
+  return fetch(`${API}/password/forgot`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(email),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+export const resetPassword = (resetInfo) => {
+  return fetch(`${API}/password/reset`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(resetInfo),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};

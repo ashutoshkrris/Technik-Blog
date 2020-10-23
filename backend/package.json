@@ -10,7 +10,6 @@
   "author": "Ashutosh Krishna",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.3.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -23,6 +22,7 @@
     "lodash": "^4.17.20",
     "mongoose": "^5.10.6",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.4.14",
     "nodemon": "^2.0.4",
     "shortid": "^2.2.15",
     "slugify": "^1.4.5",
