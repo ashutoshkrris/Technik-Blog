@@ -73,6 +73,11 @@ const Header = () => {
                 </a>
               </NavItem>
             )}
+            <NavItem>
+              <a href="/contact" style={{ textDecoration: "none" }}>
+                <NavLink style={{ cursor: "pointer" }}>Contact Us</NavLink>
+              </a>
+            </NavItem>
             {isAuth() && (
               <NavItem>
                 <a style={{ textDecoration: "none" }}>

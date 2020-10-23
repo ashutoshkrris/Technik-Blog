@@ -50,6 +50,9 @@ app.use("/api", tagRoute);
 const blogRoute = require("./src/routes/blog.route");
 app.use("/api/blog", blogRoute);
 
+const contactRoute = require("./src/routes/contact.route");
+app.use("/api", contactRoute);
+
 // port
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
