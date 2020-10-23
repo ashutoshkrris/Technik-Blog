@@ -1,10 +1,19 @@
 import fetch from "isomorphic-fetch";
 import { API } from "../config";
 import queryString from "query-string";
+import { isAuth, handleResponse } from "./auth";
 
 // Create new blog
 export const createBlog = (blog, token) => {
-  return fetch(`${API}/blog/create`, {
+  let createBlogEndpoint;
+
+  if (isAuth() && isAuth().role === 1) {
+    createBlogEndpoint = `${API}/blog/create`;
+  } else if (isAuth() && isAuth().role === 0) {
+    createBlogEndpoint = `${API}/blog/user/create`;
+  }
+
+  return fetch(`${createBlogEndpoint}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -13,6 +22,7 @@ export const createBlog = (blog, token) => {
     body: blog,
   })
     .then((response) => {
+      handleResponse(response);
       return response.json();
     })
     .catch((err) => console.log(err));
@@ -63,8 +73,16 @@ export const getRelated = (blog) => {
 };
 
 // get all blogs
-export const listBlogs = () => {
-  return fetch(`${API}/blog/posts`, {
+export const listBlogs = (username) => {
+  let listBlogEndpoint;
+
+  if (username) {
+    listBlogEndpoint = `${API}/blog/${username}/posts`;
+  } else {
+    listBlogEndpoint = `${API}/blog/posts`;
+  }
+
+  return fetch(`${listBlogEndpoint}`, {
     method: "GET",
   })
     .then((response) => {
@@ -75,7 +93,15 @@ export const listBlogs = () => {
 
 // Remove blog
 export const removeBlog = (slug, token) => {
-  return fetch(`${API}/blog/post/${slug}`, {
+  let deleteBlogEndpoint;
+
+  if (isAuth() && isAuth().role === 1) {
+    deleteBlogEndpoint = `${API}/blog/post/${slug}`;
+  } else if (isAuth() && isAuth().role === 0) {
+    deleteBlogEndpoint = `${API}/blog/user/post/${slug}`;
+  }
+
+  return fetch(`${deleteBlogEndpoint}`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -84,6 +110,7 @@ export const removeBlog = (slug, token) => {
     },
   })
     .then((response) => {
+      handleResponse(response);
       return response.json();
     })
     .catch((err) => console.log(err));
@@ -91,8 +118,16 @@ export const removeBlog = (slug, token) => {
 
 // Update blog
 export const updateBlog = (blog, token, slug) => {
+  let updateBlogEndpoint;
+
+  if (isAuth() && isAuth().role === 1) {
+    updateBlogEndpoint = `${API}/blog/post/${slug}`;
+  } else if (isAuth() && isAuth().role === 0) {
+    updateBlogEndpoint = `${API}/blog/user/post/${slug}`;
+  }
+
   console.log(slug, token, blog);
-  return fetch(`${API}/blog/post/${slug}`, {
+  return fetch(`${updateBlogEndpoint}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -101,6 +136,7 @@ export const updateBlog = (blog, token, slug) => {
     body: blog,
   })
     .then((response) => {
+      handleResponse(response);
       return response.json();
     })
     .catch((err) => console.log(err));

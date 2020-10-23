@@ -7,6 +7,7 @@ import { API, DOMAIN, APP_NAME, FB_ID } from "../../config";
 import renderHTML from "react-render-html";
 import moment from "moment";
 import RelatedCard from "../../components/blog/RelatedCard";
+import DisqusThread from "../../components/DisqusThread";
 
 const SingleBlog = ({ blog, query }) => {
   const [related, setRelated] = useState([]);
@@ -35,6 +36,18 @@ const SingleBlog = ({ blog, query }) => {
         </div>
       );
     });
+  };
+
+  const showComments = () => {
+    return (
+      <div>
+        <DisqusThread
+          id={blog.id}
+          title={blog.title}
+          path={`/blog/${blog.slug}`}
+        />
+      </div>
+    );
   };
 
   const head = () => (
@@ -121,14 +134,12 @@ const SingleBlog = ({ blog, query }) => {
               </section>
             </div>
 
+            <div className="container pb-5 pt-3">{showComments()}</div>
+
             <div className="container">
-              <h4 className="text-center pt-5 pb-5 h2">Related blogs</h4>
+              <h4 className="text-center pt-5 pb-3 h2">Related blogs</h4>
               <hr />
               <div className="row">{showRelatedBlogs()}</div>
-            </div>
-
-            <div className="container pb-5">
-              <p>show comments</p>
             </div>
           </article>
         </main>

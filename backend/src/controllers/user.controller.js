@@ -18,7 +18,7 @@ exports.publicProfileController = (req, res) => {
   User.findOne({ username }).exec((err, userFromDB) => {
     if (err) {
       return res.status(500).json({ error: errorHandler(err) });
-    } else if (!userFromDB) {
+    } else if (userFromDB === null) {
       return res.status(404).json({ error: "User doesn't exist." });
     } else {
       user = userFromDB;
@@ -27,6 +27,7 @@ exports.publicProfileController = (req, res) => {
         .populate("categories", "_id name slug")
         .populate("tags", "_id name slug")
         .populate("postedBy", "_id name")
+        .sort({ updatedAt: -1 })
         .limit(10)
         .select(
           "_id title slug excerpt categories tags postedBy createdAt updatedAt"
@@ -91,7 +92,7 @@ exports.profilePhotoController = (req, res) => {
   User.findOne({ username }).exec((err, user) => {
     if (err) {
       return res.status(500).json({ error: errorHandler(err) });
-    } else if (!user) {
+    } else if (user === null) {
       return res.status(404).json({ error: "User doesn't exist." });
     } else {
       if (user.photo.data) {

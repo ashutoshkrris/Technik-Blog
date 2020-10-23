@@ -5,7 +5,6 @@ const router = express.Router();
 const {
   protectedController,
   authMiddleware,
-  adminMiddleware,
 } = require("../controllers/auth.controller");
 const {
   readController,

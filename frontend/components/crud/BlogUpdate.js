@@ -272,15 +272,13 @@ const BlogUpdate = ({ router }) => {
           <div>
             <div className="form-group pb-2 text-center">
               <br />
-              <label className="btn btn-outline-info">
-                Change featured image
-                <input
-                  onChange={handleChange("photo")}
-                  type="file"
-                  accept="image/*"
-                  hidden
-                />
-              </label>
+              <label className="text-muted">Change featured image</label>
+              <br />
+              <input
+                onChange={handleChange("photo")}
+                type="file"
+                accept="image/*"
+              />
               <br />
               <small className="text-muted">
                 Image must not exceed 1 MB in size.

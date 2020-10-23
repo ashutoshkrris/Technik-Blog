@@ -4,7 +4,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { logout, isAuth } from "../actions/auth";
 import NProgress from "nprogress";
-import Search from "./blog/Search"
+import Search from "./blog/Search";
 
 import {
   Collapse,
@@ -76,19 +76,44 @@ const Header = () => {
             {isAuth() && (
               <NavItem>
                 <a style={{ textDecoration: "none" }}>
-                <NavLink
-                  style={{ cursor: "pointer" }}
-                  onClick={() => logout(() => Router.replace("/login"))}
-                >
+                  <NavLink
+                    style={{ cursor: "pointer" }}
+                    onClick={() => logout(() => Router.replace("/login"))}
+                  >
                     Logout
-                </NavLink>
+                  </NavLink>
+                </a>
+              </NavItem>
+            )}
+            &nbsp;
+            {isAuth() && isAuth().role === 1 && (
+              <NavItem>
+                <a href="/admin/crud/blog" style={{ textDecoration: "none" }}>
+                  <NavLink
+                    className="btn btn-primary text-light"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Create a blog
+                  </NavLink>
+                </a>
+              </NavItem>
+            )}
+            {isAuth() && isAuth().role === 0 && (
+              <NavItem>
+                <a href="/user/crud/blog" style={{ textDecoration: "none" }}>
+                  <NavLink
+                    className="btn btn-primary text-light"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Create a blog
+                  </NavLink>
                 </a>
               </NavItem>
             )}
           </Nav>
         </Collapse>
       </Navbar>
-      <Search/>
+      <Search />
     </React.Fragment>
   );
 };

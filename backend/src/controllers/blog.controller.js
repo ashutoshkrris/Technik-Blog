@@ -1,4 +1,5 @@
 const Blog = require("../models/blog.model");
+const User = require("../models/users.model");
 const Category = require("../models/category.model");
 const Tag = require("../models/tag.model");
 const formidable = require("formidable");
@@ -65,7 +66,6 @@ exports.createBlogController = (req, res) => {
 
     blog.save((err, result) => {
       if (err) {
-        console.log("Error ", err);
         return res.status(500).json({ error: errorHandler(err) });
       }
       // res.json(result);
@@ -124,7 +124,7 @@ exports.listBlogCTController = (req, res) => {
     .populate("categories", "_id name slug")
     .populate("tags", "_id name slug")
     .populate("postedBy", "_id name username profile")
-    .sort({ createdAt: -1 })
+    .sort({ updatedAt: -1 })
     .skip(skip)
     .limit(limit)
     .select(
@@ -259,7 +259,9 @@ exports.photoController = (req, res) => {
       if (err) {
         return res.status(500).json({ error: errorHandler(err) });
       } else if (blog === null) {
-        res.status(404).json({ error: "We were unable to find that photo." });
+        return res
+          .status(404)
+          .json({ error: "We were unable to find that photo." });
       } else {
         res.set("Content-Type", blog.photo.contentType);
         return res.send(blog.photo.data);
@@ -305,4 +307,30 @@ exports.listSearchController = (req, res) => {
       }
     ).select("-photo -body");
   }
+};
+
+exports.listUserBlogController = (req, res) => {
+  User.findOne({ username: req.params.username }).exec((err, user) => {
+    if (err) {
+      return res.status(500).json({ error: errorHandler(err) });
+    } else if (user === null) {
+      return res
+        .status(404)
+        .json({ error: "We were unable to find that user." });
+    } else {
+      let userID = user._id;
+      Blog.find({ postedBy: userID })
+        .populate("categories", "_id name slug")
+        .populate("tags", "_id name slug")
+        .populate("postedBy", "_id name username")
+        .sort({ updatedAt: -1 })
+        .select("_id title slug postedBy createdAt updatedAt")
+        .exec((err, data) => {
+          if (err) {
+            return res.status(500).json({ error: errorHandler(err) });
+          }
+          res.json(data);
+        });
+    }
+  });
 };

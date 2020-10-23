@@ -6,7 +6,7 @@ import { listBlogs, removeBlog } from "../../actions/blog";
 import moment from "moment";
 import swal from "sweetalert";
 
-const BlogRead = () => {
+const BlogRead = ({username}) => {
   const [blogs, setBlogs] = useState([]);
   const [message, setMessage] = useState("");
   const token = getCookie("token");
@@ -16,7 +16,8 @@ const BlogRead = () => {
   }, []);
 
   const loadBlogs = () => {
-    listBlogs().then((data) => {
+    listBlogs(username).then((data) => {
+      console.log(data)
       if (data.error) {
         console.log(data.error);
       } else {
@@ -59,7 +60,7 @@ const BlogRead = () => {
     if (isAuth() && isAuth().role === 0) {
       return (
         <a href={`/user/crud/${blog.slug}`} style={{ textDecoration: "none" }}>
-          <a className="btn btn-sm btn-warning">Update</a>
+          <a className="btn btn-sm btn-warning ml-2">Update</a>
         </a>
       );
     } else if (isAuth() && isAuth().role === 1) {

@@ -1,17 +1,29 @@
 import Layout from "../components/Layout";
-import LoginComponent from "../components/auth/LoginComponent"
+import { withRouter } from "next/router";
+import LoginComponent from "../components/auth/LoginComponent";
 
-const Login = () => {
+const Login = ({ router }) => {
+  const showRedirectMessage = () => {
+    if (router.query.message) {
+      return <div className="alert alert-danger">{router.query.message}</div>;
+    } else {
+      return;
+    }
+  };
+
   return (
     <Layout>
       <h2 className="text-center pt-4 pb-4">Login Page</h2>
       <div className="row">
-        <div className="col-md-8 offset-md-2">
-          <LoginComponent/>
+        <div className="col-md-6 offset-md-3 text-center"><b>{showRedirectMessage()}</b></div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 offset-md-3">
+          <LoginComponent />
         </div>
       </div>
     </Layout>
   );
 };
 
-export default Login;
+export default withRouter(Login);

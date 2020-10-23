@@ -10,15 +10,18 @@ const {
   photoController,
   relatedBlogController,
   listSearchController,
+  listUserBlogController,
 } = require("../controllers/blog.controller");
 const {
   protectedController,
   adminMiddleware,
+  authMiddleware,
+  canUpdateandDeleteMiddleware,
 } = require("../controllers/auth.controller");
 
 // validations here
 
-// routes here
+// routes for admin here
 router.post(
   "/create",
   protectedController,
@@ -43,5 +46,28 @@ router.put(
 router.get("/photo/:slug", photoController);
 router.post("/related", relatedBlogController);
 router.get("/search", listSearchController);
+
+// routes for auth users
+router.post(
+  "/user/create",
+  protectedController,
+  authMiddleware,
+  createBlogController
+);
+router.delete(
+  "/user/post/:slug",
+  protectedController,
+  authMiddleware,
+  canUpdateandDeleteMiddleware,
+  removeBlogController
+);
+router.put(
+  "/user/post/:slug",
+  protectedController,
+  authMiddleware,
+  canUpdateandDeleteMiddleware,
+  updateBlogController
+);
+router.get("/:username/posts", listUserBlogController);
 
 module.exports = router;

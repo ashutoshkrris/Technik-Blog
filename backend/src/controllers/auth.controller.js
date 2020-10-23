@@ -1,8 +1,9 @@
 const User = require("../models/users.model");
+const Blog = require("../models/blog.model");
 const shortId = require("shortid");
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
-
+const { errorHandler } = require("../helpers/dbHandlingError");
 
 exports.signupController = (req, res) => {
   // check if user is already registered
@@ -58,32 +59,48 @@ exports.logoutController = (req, res) => {
 
 exports.protectedController = expressJwt({
   secret: process.env.JWT_SECRET,
-  algorithms: ["HS256"]
+  algorithms: ["HS256"],
 });
 
-
 exports.authMiddleware = (req, res, next) => {
-  const authUserId = req.user._id
+  const authUserId = req.user._id;
   User.findById({ _id: authUserId }).exec((err, user) => {
     if (err || !user) {
-      return res.status(404).json({error: "User not found!!"})
+      return res.status(404).json({ error: "User not found!!" });
     }
-    req.profile = user
-    next()
-  })
-}
+    req.profile = user;
+    next();
+  });
+};
 
 exports.adminMiddleware = (req, res, next) => {
-  const adminUserId = req.user._id
-  console.log(adminUserId)
+  const adminUserId = req.user._id;
+  console.log(adminUserId);
   User.findById({ _id: adminUserId }).exec((err, user) => {
     if (err || !user) {
-      return res.status(404).json({error: "User not found!!"})
+      return res.status(404).json({ error: "User not found!!" });
     }
     if (user.role !== 1) {
-      return res.status(400).json({error: "You are not an admin!!"})
+      return res.status(400).json({ error: "You are not an admin!!" });
     }
-    req.profile = user
-    next()
-  })
-}
+    req.profile = user;
+    next();
+  });
+};
+
+exports.canUpdateandDeleteMiddleware = (req, res, next) => {
+  const slug = req.params.slug.toLowerCase();
+  Blog.findOne({ slug }).exec((err, data) => {
+    if (err) {
+      return res.status(500).json({ error: errorHandler(err) });
+    }
+    let authorizedUser =
+      data.postedBy._id.toString() === req.profile._id.toString();
+    if (!authorizedUser) {
+      return res.status(403).json({
+        error: "Access to the requested resource is forbidden for some reason.",
+      });
+    }
+    next();
+  });
+};
