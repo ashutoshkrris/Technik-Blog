@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   signupController,
+  activationController,
   loginController,
   logoutController,
   forgotPasswordController,
@@ -19,6 +20,7 @@ const {
 
 // routes here
 router.post("/signup", signupValidator, runValidation, signupController);
+router.post("/activate", activationController);
 router.post("/login", loginValidator, runValidation, loginController);
 router.get("/logout", logoutController);
 router.put(

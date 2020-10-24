@@ -17,26 +17,79 @@ let mailTransporter = nodemailer.createTransport({
 });
 
 exports.signupController = (req, res) => {
+  const { name, email, password, confirmPassword } = req.body;
   // check if user is already registered
   User.findOne({ email: req.body.email }).exec((err, user) => {
     if (user) {
       return res.status(403).json({ error: "User already exists" });
     }
-    const { name, email, password, confirmPassword } = req.body;
-    let username = shortId.generate();
-    let profile = `${process.env.CLIENT_URL}/profile/${username}`;
-    let newUser = new User({ name, email, password, profile, username });
-    newUser.save((err, success) => {
+    const token = jwt.sign(
+      { name, email, password },
+      process.env.JWT_ACCOUNT_ACTIVATION,
+      { expiresIn: "30m" }
+    );
+    const emailData = {
+      to: email,
+      from: `${process.env.APPNAME} <noreply@technik.com>`,
+      subject: `Account Activation Link | ${process.env.APPNAME}`,
+      html: `
+      <p>Hello ${name},</p>
+      <p>Thank you for signing up on <a href="http://technik.com">Technik</a>.</p>
+      <p>In order to activate your Technik account, please use the below link to confirm your email address and complete the activation process.<p>
+      <p>${process.env.CLIENT_URL}/users/account/activate/${token}</p>
+      <br>
+      <p>Thanks and regards<br>Technik</p>
+      `,
+    };
+    mailTransporter.sendMail(emailData, (err, data) => {
       if (err) {
-        return res
-          .status(500)
-          .json({ error: "We could not signup you, sorry!" });
+        return res.status(451).json({
+          error: errorHandler(err),
+        });
+      } else {
+        return res.status(250).json({
+          message: `Please follow the instructions mentioned in the email sent to ${email} in order to activate your account.`,
+        });
       }
-      res
-        .status(200)
-        .json({ message: "Signup Successful. You can now sign in." });
     });
   });
+};
+
+exports.activationController = (req, res) => {
+  const token = req.body.token;
+  if (token) {
+    jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).json({
+          error: "Expired link. Please signup again.",
+        });
+      }
+
+      const { name, email, password } = jwt.decode(token);
+
+      let username = shortId.generate();
+      let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+
+      const user = new User({ name, email, password, profile, username });
+      user.save((err, user) => {
+        if (err) {
+          return res.status(401).json({
+            error: errorHandler(err),
+          });
+        }
+        return res.json({
+          message: "Singup success! You can now login.",
+        });
+      });
+    });
+  } else {
+    return res.json({
+      message: "Something went wrong. Try again later.",
+    });
+  }
 };
 
 exports.loginController = (req, res) => {
@@ -156,7 +209,7 @@ exports.forgotPasswordController = (req, res) => {
               });
             } else {
               return res.status(250).json({
-                message: `Please follow the instructions mentioned in the email sent to ${email}.`,
+                message: `Please follow the instructions mentioned in the email sent to ${email} in order to reset your password.`,
               });
             }
           });
@@ -218,7 +271,7 @@ exports.resetPasswordController = (req, res) => {
             };
             mailTransporter.sendMail(emailData, (err, data) => {
               if (err) {
-                console.log(errorHandler(err))
+                console.log(errorHandler(err));
               }
             });
           });

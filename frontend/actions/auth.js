@@ -34,6 +34,22 @@ export const signup = (user) => {
     .catch((err) => console.log(err));
 };
 
+export const activate = (user) => {
+  console.log("Received: ", user);
+  return fetch(`${API}/activate`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
 // login
 export const login = (user) => {
   return fetch(`${API}/login`, {
