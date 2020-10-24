@@ -1,6 +1,22 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
 
 class MyDocument extends Document {
+  setGoogleTags() {
+    if (publicRuntimeConfig.PRODUCTION) {
+      return {
+        __html: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-K74947TYEE');
+        `,
+      };
+    }
+  }
+
   render() {
     return (
       <Html lang="en">
@@ -23,6 +39,11 @@ class MyDocument extends Document {
           />
           <link rel="stylesheet" href="/static/css/styles.css" />
           <link rel="shortcut icon" href="/static/images/icon.ico" />
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-K74947TYEE"
+          ></script>
+          <script dangerouslySetInnerHTML={this.setGoogleTags()}></script>
         </Head>
         <body>
           <Main />
