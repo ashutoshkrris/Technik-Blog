@@ -13,3 +13,5 @@ export const DOMAIN = publicRuntimeConfig.PRODUCTION
 export const FB_ID = publicRuntimeConfig.FB_ID;
 
 export const DISQUS_SHORTNAME = publicRuntimeConfig.DISQUS_SHORTNAME;
+
+export const GOOGLE_CLIENT_ID = publicRuntimeConfig.GOOGLE_CLIENT_ID;

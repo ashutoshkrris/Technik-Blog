@@ -11,10 +11,10 @@ const UserIndex = () => {
               <h2>User Dashboard</h2>
             </div>
             <div className="col-md-4">
-              <ul class="list-group">
+              <ul className="list-group">
                 <a href="/user/update" style={{ textDecoration: "none" }}>
                   <li
-                    class="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action"
                     style={{ cursor: "pointer" }}
                   >
                     Update Profile
@@ -23,7 +23,7 @@ const UserIndex = () => {
 
                 <a href="/user/crud/blog" style={{ textDecoration: "none" }}>
                   <li
-                    class="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action"
                     style={{ cursor: "pointer" }}
                   >
                     Create New Blog
@@ -32,7 +32,7 @@ const UserIndex = () => {
 
                 <a href="/user/crud/blogs" style={{ textDecoration: "none" }}>
                   <li
-                    class="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action"
                     style={{ cursor: "pointer" }}
                   >
                     Update/Delete Blog
